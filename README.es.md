@@ -12,7 +12,7 @@
 
 [繁體中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [简体中文](README.zh-Hans.md) · [한국어](README.ko.md) · **Español**
 
-[Por qué](#-por-qué) · [Funciones](#-funciones) · [Cómo funciona](#-cómo-funciona) · [Instalación](#-instalación) · [Uso](#-uso) · [Requisitos](#-requisitos) · [Limitaciones conocidas](#-limitaciones-conocidas) · [Privacidad](#-privacidad) · [Proyectos similares](#-proyectos-similares) · [Desarrollo](#-desarrollo)
+[Por qué](#-por-qué) · [Funciones](#-funciones) · [Cómo funciona](#-cómo-funciona) · [Instalación](#-instalación) · [Uso](#-uso) · [Requisitos](#-requisitos) · [Limitaciones conocidas](#-limitaciones-conocidas) · [Privacidad](#-privacidad) · [Desarrollo](#-desarrollo)
 
 ---
 
@@ -108,15 +108,6 @@ Chrome descarga y gestiona los modelos y los comparte entre todos los sitios y e
 - Los ajustes, la posición del cuadro y las frases guardadas se almacenan en el almacenamiento local de Chrome (`chrome.storage.local`).
 - Los únicos enlaces a sitios externos son los botones «Google Traductor» y «DeepL» de las frases guardadas: la frase se envía a ese sitio **solo cuando pulsas**.
 - Sin estadísticas, rastreo ni anuncios.
-
-## 🧭 Proyectos similares
-
-| Proyecto | Enfoque | Diferencia |
-|---|---|---|
-| [live-captions-translate](https://github.com/petercunha/live-captions-translate) | Reconocimiento con Moonshine / Whisper (WebGPU) + Chrome Translator, local | Necesita un modelo de reconocimiento aparte y una GPU; FreeLiveSub usa el reconocimiento integrado de Chrome |
-| [x-jimaku](https://github.com/Sora-bluesky/x-jimaku) | Reconocimiento con Whisper + Gemini Nano / Translator | Solo vídeos de x.com, inglés → japonés |
-| [subtitle_autopilot_ext](https://github.com/j75689/subtitle_autopilot_ext) | Borrador con Translator + refinado con Gemini Nano | Traduce los subtítulos que ya tiene el vídeo, no el audio |
-| [subtrans-ai-lab](https://github.com/KOJH-archive/subtrans-ai-lab) | Gemini Nano + Translator + reconocimiento local | Prototipo experimental |
 
 ## 📂 Estructura
 

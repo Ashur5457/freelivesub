@@ -12,7 +12,7 @@
 
 [繁體中文](README.md) · [English](README.en.md) · **日本語** · [简体中文](README.zh-Hans.md) · [한국어](README.ko.md) · [Español](README.es.md)
 
-[なぜ作ったか](#-なぜ作ったか) · [できること](#-できること) · [しくみ](#-しくみ) · [インストール](#-インストール) · [使い方](#-使い方) · [動作環境](#-動作環境) · [既知の制限](#-既知の制限) · [プライバシー](#-プライバシー) · [類似プロジェクト](#-類似プロジェクト) · [開発](#-開発)
+[なぜ作ったか](#-なぜ作ったか) · [できること](#-できること) · [しくみ](#-しくみ) · [インストール](#-インストール) · [使い方](#-使い方) · [動作環境](#-動作環境) · [既知の制限](#-既知の制限) · [プライバシー](#-プライバシー) · [開発](#-開発)
 
 ---
 
@@ -108,15 +108,6 @@ flowchart LR
 - 設定、字幕枠の位置、保存した字幕は Chrome のローカルストレージ（`chrome.storage.local`）に保存します。
 - 外部サイトにつながるのは、保存した字幕の「Google 翻訳」「DeepL」ボタンだけです。**押したときだけ**、その一文がそのサイトに送られます。
 - 統計・トラッキング・広告は一切ありません。
-
-## 🧭 類似プロジェクト
-
-| プロジェクト | 方式 | 違い |
-|---|---|---|
-| [live-captions-translate](https://github.com/petercunha/live-captions-translate) | Moonshine／Whisper（WebGPU）で認識＋Chrome Translator、ローカル | 認識モデルを別途ダウンロードし GPU を使う。FreeLiveSub は Chrome 内蔵の認識を使用 |
-| [x-jimaku](https://github.com/Sora-bluesky/x-jimaku) | Whisper で認識＋Gemini Nano／Translator | x.com の動画のみ、英語 → 日本語 |
-| [subtitle_autopilot_ext](https://github.com/j75689/subtitle_autopilot_ext) | Translator で下訳＋Gemini Nano で仕上げ | 動画にもともとある字幕を翻訳し、音声は扱わない |
-| [subtrans-ai-lab](https://github.com/KOJH-archive/subtrans-ai-lab) | Gemini Nano＋Translator＋ローカル認識 | 実験的なプロトタイプ |
 
 ## 📂 ファイル構成
 

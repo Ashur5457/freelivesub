@@ -12,7 +12,7 @@
 
 [繁體中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [简体中文](README.zh-Hans.md) · **한국어** · [Español](README.es.md)
 
-[만든 이유](#-만든-이유) · [기능](#-기능) · [작동 방식](#-작동-방식) · [설치](#-설치) · [사용법](#-사용법) · [요구 사항](#-요구-사항) · [알려진 제한](#-알려진-제한) · [개인정보](#-개인정보) · [비슷한 프로젝트](#-비슷한-프로젝트) · [개발](#-개발)
+[만든 이유](#-만든-이유) · [기능](#-기능) · [작동 방식](#-작동-방식) · [설치](#-설치) · [사용법](#-사용법) · [요구 사항](#-요구-사항) · [알려진 제한](#-알려진-제한) · [개인정보](#-개인정보) · [개발](#-개발)
 
 ---
 
@@ -108,15 +108,6 @@ flowchart LR
 - 설정, 자막 상자 위치, 저장한 문장은 Chrome 로컬 저장소(`chrome.storage.local`)에 저장됩니다.
 - 외부 사이트로 연결되는 것은 저장한 문장의 "Google 번역", "DeepL" 버튼뿐이며, **직접 누를 때만** 그 문장이 해당 사이트로 전송됩니다.
 - 통계, 추적, 광고가 전혀 없습니다.
-
-## 🧭 비슷한 프로젝트
-
-| 프로젝트 | 방식 | 차이 |
-|---|---|---|
-| [live-captions-translate](https://github.com/petercunha/live-captions-translate) | Moonshine / Whisper(WebGPU) 인식 + Chrome Translator, 로컬 | 인식 모델을 따로 다운로드하고 GPU를 사용. FreeLiveSub는 Chrome 내장 인식을 사용 |
-| [x-jimaku](https://github.com/Sora-bluesky/x-jimaku) | Whisper 인식 + Gemini Nano / Translator | x.com 영상만, 영어 → 일본어 |
-| [subtitle_autopilot_ext](https://github.com/j75689/subtitle_autopilot_ext) | Translator 초안 + Gemini Nano 다듬기 | 영상에 원래 있는 자막을 번역하며 소리는 다루지 않음 |
-| [subtrans-ai-lab](https://github.com/KOJH-archive/subtrans-ai-lab) | Gemini Nano + Translator + 로컬 인식 | 실험적인 프로토타입 |
 
 ## 📂 파일 구조
 

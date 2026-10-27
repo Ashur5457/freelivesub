@@ -12,7 +12,7 @@
 
 **繁體中文** · [English](README.en.md) · [日本語](README.ja.md) · [简体中文](README.zh-Hans.md) · [한국어](README.ko.md) · [Español](README.es.md)
 
-[為什麼做](#-為什麼做) · [能做什麼](#-能做什麼) · [怎麼運作](#-怎麼運作) · [安裝](#-安裝) · [使用](#-使用) · [需求](#-需求) · [已知限制](#-已知限制) · [隱私](#-隱私) · [類似專案](#-類似專案) · [開發](#-開發)
+[為什麼做](#-為什麼做) · [能做什麼](#-能做什麼) · [怎麼運作](#-怎麼運作) · [安裝](#-安裝) · [使用](#-使用) · [需求](#-需求) · [已知限制](#-已知限制) · [隱私](#-隱私) · [開發](#-開發)
 
 ---
 
@@ -108,15 +108,6 @@ flowchart LR
 - 設定、字幕框位置、收藏的句子都存在 Chrome 的本機儲存空間（`chrome.storage.local`）。
 - 唯一會連到外部網站的是收藏卡片上的「Google 翻譯」「DeepL」按鈕：**只有你按下時**，才會把那一句話送到該網站。
 - 沒有任何統計、追蹤或廣告。
-
-## 🧭 類似專案
-
-| 專案 | 做法 | 差別 |
-|---|---|---|
-| [live-captions-translate](https://github.com/petercunha/live-captions-translate) | Moonshine／Whisper（WebGPU）辨識＋Chrome Translator，本機 | 辨識模型要另外下載、靠顯示卡；FreeLiveSub 用 Chrome 內建辨識 |
-| [x-jimaku](https://github.com/Sora-bluesky/x-jimaku) | Whisper 辨識＋Gemini Nano／Translator | 只支援 x.com 影片、英文 → 日文 |
-| [subtitle_autopilot_ext](https://github.com/j75689/subtitle_autopilot_ext) | Translator 初稿＋Gemini Nano 潤飾 | 翻譯影片本來就有的字幕，不處理聲音 |
-| [subtrans-ai-lab](https://github.com/KOJH-archive/subtrans-ai-lab) | Gemini Nano＋Translator＋本機辨識 | 實驗性原型 |
 
 ## 📂 檔案結構
 

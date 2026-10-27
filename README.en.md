@@ -12,7 +12,7 @@
 
 [繁體中文](README.md) · **English** · [日本語](README.ja.md) · [简体中文](README.zh-Hans.md) · [한국어](README.ko.md) · [Español](README.es.md)
 
-[Why](#-why) · [Features](#-features) · [How it works](#-how-it-works) · [Install](#-install) · [Usage](#-usage) · [Requirements](#-requirements) · [Known limitations](#-known-limitations) · [Privacy](#-privacy) · [Similar projects](#-similar-projects) · [Development](#-development)
+[Why](#-why) · [Features](#-features) · [How it works](#-how-it-works) · [Install](#-install) · [Usage](#-usage) · [Requirements](#-requirements) · [Known limitations](#-known-limitations) · [Privacy](#-privacy) · [Development](#-development)
 
 ---
 
@@ -108,15 +108,6 @@ Chrome downloads and manages the models and shares them across all sites and ext
 - Settings, the box position, and saved lines are stored in Chrome's local storage (`chrome.storage.local`).
 - The only links to outside sites are the "Google Translate" and "DeepL" buttons on saved lines: a line is sent to that site **only when you click**.
 - No analytics, tracking, or ads.
-
-## 🧭 Similar projects
-
-| Project | Approach | Difference |
-|---|---|---|
-| [live-captions-translate](https://github.com/petercunha/live-captions-translate) | Moonshine / Whisper (WebGPU) recognition + Chrome Translator, on-device | Needs a separate recognition model and a GPU; FreeLiveSub uses Chrome's built-in recognition |
-| [x-jimaku](https://github.com/Sora-bluesky/x-jimaku) | Whisper recognition + Gemini Nano / Translator | x.com videos only, English → Japanese |
-| [subtitle_autopilot_ext](https://github.com/j75689/subtitle_autopilot_ext) | Translator draft + Gemini Nano refinement | Translates a video's existing subtitles, not its audio |
-| [subtrans-ai-lab](https://github.com/KOJH-archive/subtrans-ai-lab) | Gemini Nano + Translator + on-device recognition | Experimental prototype |
 
 ## 📂 Project structure
 

@@ -65,9 +65,9 @@ flowchart LR
 
 | 步骤 | 做法 |
 |---|---|
-| 1. 下载 | 点本页上方的 **Code → Download ZIP** 并解压；或 `git clone https://github.com/Ashur5457/freelivesub.git` |
+| 1. 下载 | 点 **[⬇ 下载 ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)**，下载后解压（会得到 `freelivesub-main` 文件夹）。会用 git 的话也可以 `git clone https://github.com/Ashur5457/freelivesub.git` |
 | 2. 打开开发者模式 | 在地址栏输入 `chrome://extensions`，打开右上角的“开发者模式” |
-| 3. 加载 | 点“加载已解压的扩展程序”，选择刚才的文件夹 |
+| 3. 加载 | 点“加载已解压的扩展程序”，选择 `freelivesub-main` 文件夹（里面要直接看到 `manifest.json`） |
 | 4. 固定图标 | 点工具栏的拼图按钮 🧩，把 FreeLiveSub 旁边的图钉点亮 |
 | 5. 准备模型 | 在 FreeLiveSub 图标上点右键 →“打开侧边栏”，选好语言后点 **下载缺少的模型**（只需一次） |
 

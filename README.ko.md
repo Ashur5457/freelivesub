@@ -65,9 +65,9 @@ flowchart LR
 
 | 단계 | 방법 |
 |---|---|
-| 1. 다운로드 | 이 페이지 위쪽의 **Code → Download ZIP**을 눌러 압축을 풀거나, `git clone https://github.com/Ashur5457/freelivesub.git` |
+| 1. 다운로드 | **[⬇ ZIP 다운로드](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)**를 눌러 압축을 풉니다(`freelivesub-main` 폴더가 생깁니다). git을 쓴다면 `git clone https://github.com/Ashur5457/freelivesub.git` |
 | 2. 개발자 모드 켜기 | 주소창에 `chrome://extensions`를 입력하고 오른쪽 위 "개발자 모드"를 켭니다 |
-| 3. 로드 | "압축해제된 확장 프로그램을 로드합니다"를 눌러 폴더를 선택합니다 |
+| 3. 로드 | "압축해제된 확장 프로그램을 로드합니다"를 눌러 `freelivesub-main` 폴더(안에 `manifest.json`이 바로 보이는 폴더)를 선택합니다 |
 | 4. 아이콘 고정 | 툴바의 퍼즐 버튼 🧩에서 FreeLiveSub 옆의 핀을 켭니다 |
 | 5. 모델 준비 | FreeLiveSub 아이콘을 오른쪽 클릭 → "사이드 패널 열기", 언어를 고른 뒤 **빠진 모델 다운로드**를 누릅니다(한 번만) |
 

@@ -65,9 +65,9 @@ FreeLiveSub isn't on the Chrome Web Store yet. Install it with "Load unpacked":
 
 | Step | How |
 |---|---|
-| 1. Download | Click **Code → Download ZIP** at the top of this page and unzip it, or run `git clone https://github.com/Ashur5457/freelivesub.git` |
+| 1. Download | Click **[⬇ Download ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)** and unzip it (you get a `freelivesub-main` folder). If you use git: `git clone https://github.com/Ashur5457/freelivesub.git` |
 | 2. Turn on developer mode | Go to `chrome://extensions` and turn on "Developer mode" in the top-right corner |
-| 3. Load | Click "Load unpacked" and choose the folder |
+| 3. Load | Click "Load unpacked" and choose the `freelivesub-main` folder (the one that directly contains `manifest.json`) |
 | 4. Pin the icon | Click the puzzle-piece button 🧩 in the toolbar and pin FreeLiveSub |
 | 5. Prepare models | Right-click the FreeLiveSub icon → "Open side panel", choose your languages, then click **Download missing models** (only once) |
 

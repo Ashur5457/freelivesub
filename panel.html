@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<title>FreeLiveSub</title>
+<style>
+  /* 顏色全部是主題變數（--bg、--card、--line、--text、--muted、--accent…），由 panel.js 依主題和淺色／深色模式設定 */
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 12px; background: var(--bg); color: var(--text);
+         font: 13px/1.5 system-ui, "Microsoft JhengHei", "Yu Gothic UI", sans-serif; }
+
+  .top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  h1 { font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+  .ui-lang { margin-left: auto; display: inline-flex; align-items: center; gap: 2px; padding: 0 2px 0 8px;
+             border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--muted); }
+  .ui-lang select { border: 0; background: transparent; padding: 4px 2px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+  .card-title { font-size: 11px; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+  .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .with-icon { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+  .with-icon svg { color: var(--accent); }
+  summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  summary::-webkit-details-marker { display: none; }
+  summary svg { color: var(--accent); }
+  summary::after { content: ''; margin-left: auto; width: 7px; height: 7px; border-right: 2px solid var(--muted);
+                   border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .15s; }
+  details[open] summary { margin-bottom: 8px; }
+  details[open] summary::after { transform: rotate(-135deg); }
+
+  button { font: inherit; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 10px;
+           padding: 7px 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  button:hover { border-color: var(--accent); }
+  button.primary { flex: 1; background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+  button.primary:hover { filter: brightness(1.08); }
+  button.round { width: 34px; height: 34px; padding: 0; border-radius: 50%; }
+  button.ghost { border: 0; width: 30px; height: 30px; padding: 0; border-radius: 8px; color: var(--muted); }
+  button.ghost:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
+
+  /* 狀態卡：燈號＋狀態＋目前的分頁 */
+  .status-card { display: flex; align-items: center; gap: 12px; }
+  .led { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+  .status-card[data-status=listening] .led  { background: #68BE8D; box-shadow: 0 0 0 4px color-mix(in srgb, #68BE8D 25%, transparent); }
+  .status-card[data-status=connecting] .led { background: #F8B500; }
+  .status-card[data-status=error] .led      { background: var(--error); }
+  .st { flex: 1; min-width: 0; }
+  .st-main { font-weight: 600; }
+  .st-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .status-card[data-status=error] .st-sub { white-space: normal; color: var(--error); }
+  .st-btns { display: flex; gap: 6px; }
+
+  /* 語言卡 */
+  #langs { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 6px; align-items: center; }
+  #langs select { width: 100%; padding: 7px 8px; font-size: 13px; border-radius: 10px; }
+  .actions { display: flex; gap: 6px; margin: 10px 0 8px; }
+  button:disabled { opacity: .55; cursor: default; filter: none; }
+
+  /* 模型狀態清單：這個語言組合需要哪些模型、裝好了沒 */
+  #models { list-style: none; margin: 10px 0 6px; padding: 8px 10px; border-radius: 10px; background: var(--bg); }
+  #models li { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 2px 0; }
+  #models .mk { width: 16px; text-align: center; font-weight: 700; }
+  #models .st { margin-left: auto; font-size: 11px; color: var(--muted); }
+  #models li[data-state=available] .mk { color: var(--accent); }
+  #models li[data-state=downloadable] .mk, #models li[data-state=downloading] .mk { color: #F8B500; }
+  #models li[data-state=unavailable] .mk { color: var(--error); }
+  .using { font-size: 12px; color: var(--muted); }
+  #mode { color: var(--text); font-weight: 600; }
+  .local { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: 4px 0; }
+  .note { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* 字幕紀錄：新的在上，最新一句左邊是主色條 */
+  #subs { max-height: 50vh; overflow: auto; }
+  .seg { padding: 4px 0 4px 10px; border-left: 3px solid var(--line); margin: 8px 0; }
+  .seg:first-child { border-left-color: var(--accent); }
+  .seg.interim { opacity: .6; }
+  .src { color: var(--muted); font-size: 12px; }
+  .trans { font-size: 14px; }
+  .trans.q::after { content: ' ✨'; font-size: 11px; }   /* 品質優先重翻過 */
+  .seg { position: relative; padding-right: 30px; }
+  .seg .star { position: absolute; top: 2px; right: 0; opacity: 0; }
+  .seg:hover .star, .seg.marked .star { opacity: 1; }
+  .seg.marked .star { color: #F8B500; }
+  .seg.marked .star svg, .mark .star svg { fill: currentColor; }
+
+  /* 收藏的句子 */
+  #marks { max-height: 60vh; overflow: auto; }
+  .mark { padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .mark:last-child { border-bottom: 0; }
+  .mark .meta { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mark .acts { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .mark .acts button, .mark .acts a { font-size: 11px; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line);
+                                      color: var(--text); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .mark .acts a:hover, .mark .acts button:hover { border-color: var(--accent); }
+  .mark .acts .del { margin-left: auto; color: var(--muted); }
+  .empty-note { font-size: 12px; color: var(--muted); }
+
+  #log { font: 11px/1.45 ui-monospace, Consolas, monospace; white-space: pre-wrap; margin: 0; padding: 8px;
+         background: var(--bg); border: 1px solid var(--line); border-radius: 10px; max-height: 220px; overflow: auto; }
+</style>
+<body>
+  <header class="top">
+    <h1><img src="icons/icon32.png" width="22" height="22" alt="">FreeLiveSub</h1>
+    <label class="ui-lang" data-icon="globe"><select data-pref="uiLang" id="uiLang"></select></label>
+  </header>
+
+  <section class="card status-card" id="statusCard">
+    <span class="led"></span>
+    <div class="st"><div class="st-main" id="status"></div><div class="st-sub" id="statusSub"></div></div>
+    <div class="st-btns">
+      <button id="toggle" class="round" data-icon="pause" data-i18n-title="btn.toggle"></button>
+      <button id="stop" class="round" data-icon="stop" data-i18n-title="btn.stop"></button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-title" data-i18n="panel.lang"></div>
+    <div id="langs"></div>
+    <ul id="models"></ul>
+    <div class="using"><span data-i18n="panel.using"></span><span id="mode"></span></div>
+    <div class="actions">
+      <button id="prepare" class="primary" data-icon="download"><span id="prepareText"></span></button>
+      <button id="check" data-icon="check"><span data-i18n="btn.check"></span></button>
+    </div>
+    <label class="local"><input type="checkbox" class="toggle" data-pref="local"><span data-i18n="panel.local"></span></label>
+    <div class="note" data-i18n="panel.prepareHint"></div>
+    <div class="note" data-i18n="panel.legend"></div>
+  </section>
+
+  <details class="card">
+    <summary data-icon="palette"><span data-i18n="panel.style"></span></summary>
+    <div id="form"></div>
+  </details>
+
+  <section class="card">
+    <div class="card-head">
+      <span class="with-icon" data-icon="history"><span data-i18n="panel.history"></span></span>
+      <span>
+        <button id="copy" class="ghost" data-icon="copy" data-i18n-title="btn.copy"></button>
+        <button id="clear" class="ghost" data-icon="clear" data-i18n-title="btn.clear"></button>
+      </span>
+    </div>
+    <div id="subs"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <span class="with-icon" data-icon="star"><span data-i18n="panel.marks"></span></span>
+      <span>
+        <button id="exportMarks" class="ghost" data-icon="download" data-i18n-title="mark.export"></button>
+        <button id="clearMarks" class="ghost" data-icon="clear" data-i18n-title="mark.clearAll"></button>
+      </span>
+    </div>
+    <div id="marks"></div>
+  </section>
+
+  <details class="card">
+    <summary data-icon="book"><span data-i18n="menu.help"></span></summary>
+    <div id="help"></div>
+  </details>
+
+  <details class="card">
+    <summary data-icon="check"><span>實驗：Gemini Nano</span></summary>
+    <div class="note">測試 Chrome 內建的 Gemini Nano 能不能翻得比目前好。結果會寫在下面的除錯紀錄。</div>
+    <div class="actions">
+      <button id="labCheck">檢查</button>
+      <button id="labDownload" data-icon="download">下載 Gemini Nano（約數 GB）</button>
+    </div>
+    <div class="actions">
+      <button id="labCompare" class="primary">比較翻譯</button>
+    </div>
+    <div class="note">「比較翻譯」會用你收藏的最近 5 句（沒有收藏就用內建範例），分別交給目前的翻譯和 Gemini Nano。</div>
+  </details>
+
+  <details class="card" open>
+    <summary data-icon="terminal"><span data-i18n="panel.log"></span></summary>
+    <pre id="log"></pre>
+  </details>
+
+  <script src="i18n.js"></script>
+  <script src="icons.js"></script>
+  <script src="prefs.js"></script>
+  <script src="marks.js"></script>
+  <script src="split.js"></script>
+  <script src="panel.js"></script>
+  <script src="lab.js"></script>
+</body>
+</html>

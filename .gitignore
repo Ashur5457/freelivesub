@@ -1,0 +1,11 @@
+# 個人的 Claude Code 筆記與設定（不公開）
+CLAUDE.local.md
+.claude/settings.local.json
+
+# 開發時產生的臨時測試頁
+_test_*.html
+
+# 作業系統產生的檔案
+Thumbs.db
+desktop.ini
+.DS_Store

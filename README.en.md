@@ -63,13 +63,37 @@ flowchart LR
 
 FreeLiveSub isn't on the Chrome Web Store yet. Install it with "Load unpacked":
 
-| Step | How |
-|---|---|
-| 1. Download | Click **[⬇ Download ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)** and unzip it (you get a `freelivesub-main` folder). If you use git: `git clone https://github.com/Ashur5457/freelivesub.git` |
-| 2. Turn on developer mode | Go to `chrome://extensions` and turn on "Developer mode" in the top-right corner |
-| 3. Load | Click "Load unpacked" and choose the `freelivesub-main` folder (the one that directly contains `manifest.json`) |
-| 4. Pin the icon | Click the puzzle-piece button 🧩 in the toolbar and pin FreeLiveSub |
-| 5. Prepare models | Right-click the FreeLiveSub icon → "Open side panel", choose your languages, then click **Download missing models** (only once) |
+### 1. Download
+
+Click **[⬇ Download ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)** and unzip it (you get a `freelivesub-main` folder). If you use git: `git clone https://github.com/Ashur5457/freelivesub.git`
+
+### 2. Turn on developer mode
+
+Go to `chrome://extensions` and turn on "Developer mode" in the top-right corner
+
+<img src="docs/readme/step2.png" width="700" alt="2. Turn on developer mode">
+
+### 3. Load
+
+Click "Load unpacked" and choose the `freelivesub-main` folder (the one that directly contains `manifest.json`)
+
+<img src="docs/readme/step3.png" width="640" alt="3. Load">
+
+<img src="docs/readme/step3b.png" width="560" alt="3. Load">
+
+### 4. Pin the icon
+
+Click the puzzle-piece button 🧩 in the toolbar and pin FreeLiveSub
+
+<img src="docs/readme/step4.png" width="440" alt="4. Pin the icon">
+
+### 5. Prepare models
+
+Right-click the FreeLiveSub icon → "Open side panel", choose your languages, then click **Download missing models** (only once)
+
+<img src="docs/readme/step5.png" width="320" alt="5. Prepare models">
+
+When the download finishes, the button changes to "All installed ✓".
 
 ## 🎬 Usage
 

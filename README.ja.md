@@ -63,13 +63,37 @@ flowchart LR
 
 まだ Chrome ウェブストアには公開していません。「パッケージ化されていない拡張機能を読み込む」でインストールします。
 
-| 手順 | やり方 |
-|---|---|
-| 1. ダウンロード | **[⬇ ZIP をダウンロード](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)** を押して展開（`freelivesub-main` フォルダができます）。git を使う場合は `git clone https://github.com/Ashur5457/freelivesub.git` |
-| 2. デベロッパー モードをオン | アドレスバーに `chrome://extensions` と入力し、右上の「デベロッパー モード」をオン |
-| 3. 読み込む | 「パッケージ化されていない拡張機能を読み込む」を押し、`freelivesub-main` フォルダ（中に `manifest.json` が直接あるもの）を選ぶ |
-| 4. アイコンを固定 | ツールバーのパズルボタン 🧩 から FreeLiveSub のピンをオン |
-| 5. モデルを準備 | FreeLiveSub アイコンを右クリック →「サイドパネルを開く」、言語を選んで **足りないモデルをダウンロード** を押す（1 回だけ） |
+### 1. ダウンロード
+
+**[⬇ ZIP をダウンロード](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)** を押して展開（`freelivesub-main` フォルダができます）。git を使う場合は `git clone https://github.com/Ashur5457/freelivesub.git`
+
+### 2. デベロッパー モードをオン
+
+アドレスバーに `chrome://extensions` と入力し、右上の「デベロッパー モード」をオン
+
+<img src="docs/readme/step2.png" width="700" alt="2. デベロッパー モードをオン">
+
+### 3. 読み込む
+
+「パッケージ化されていない拡張機能を読み込む」を押し、`freelivesub-main` フォルダ（中に `manifest.json` が直接あるもの）を選ぶ
+
+<img src="docs/readme/step3.png" width="640" alt="3. 読み込む">
+
+<img src="docs/readme/step3b.png" width="560" alt="3. 読み込む">
+
+### 4. アイコンを固定
+
+ツールバーのパズルボタン 🧩 から FreeLiveSub のピンをオン
+
+<img src="docs/readme/step4.png" width="440" alt="4. アイコンを固定">
+
+### 5. モデルを準備
+
+FreeLiveSub アイコンを右クリック →「サイドパネルを開く」、言語を選んで **足りないモデルをダウンロード** を押す（1 回だけ）
+
+<img src="docs/readme/step5.png" width="320" alt="5. モデルを準備">
+
+ダウンロードが終わると、ボタンが「すべてインストール済み ✓」に変わります。
 
 ## 🎬 使い方
 

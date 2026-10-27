@@ -63,13 +63,37 @@ flowchart LR
 
 目前還沒上架 Chrome 線上應用程式商店，請用「載入未封裝項目」安裝：
 
-| 步驟 | 做法 |
-|---|---|
-| 1. 下載 | 點 **[⬇ 下載 ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)**，下載後解壓縮（會得到 `freelivesub-main` 資料夾）。會用 git 的話也可以 `git clone https://github.com/Ashur5457/freelivesub.git` |
-| 2. 開啟開發人員模式 | Chrome 網址列輸入 `chrome://extensions`，打開右上角的「開發人員模式」 |
-| 3. 載入 | 按「載入未封裝項目」，選 `freelivesub-main` 資料夾（裡面要直接看得到 `manifest.json`） |
-| 4. 釘選圖示 | 按工具列的拼圖按鈕 🧩，把 FreeLiveSub 旁邊的圖釘點亮 |
-| 5. 準備模型 | 在 FreeLiveSub 圖示上按右鍵 →「開啟側邊面板」，選好語言後按「**下載缺少的模型**」（只需一次） |
+### 1. 下載
+
+點 **[⬇ 下載 ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)**，下載後解壓縮（會得到 `freelivesub-main` 資料夾）。會用 git 的話也可以 `git clone https://github.com/Ashur5457/freelivesub.git`
+
+### 2. 開啟開發人員模式
+
+Chrome 網址列輸入 `chrome://extensions`，打開右上角的「開發人員模式」
+
+<img src="docs/readme/step2.png" width="700" alt="2. 開啟開發人員模式">
+
+### 3. 載入
+
+按「載入未封裝項目」，選 `freelivesub-main` 資料夾（裡面要直接看得到 `manifest.json`）
+
+<img src="docs/readme/step3.png" width="640" alt="3. 載入">
+
+<img src="docs/readme/step3b.png" width="560" alt="3. 載入">
+
+### 4. 釘選圖示
+
+按工具列的拼圖按鈕 🧩，把 FreeLiveSub 旁邊的圖釘點亮
+
+<img src="docs/readme/step4.png" width="440" alt="4. 釘選圖示">
+
+### 5. 準備模型
+
+在 FreeLiveSub 圖示上按右鍵 →「開啟側邊面板」，選好語言後按「**下載缺少的模型**」（只需一次）
+
+<img src="docs/readme/step5.png" width="320" alt="5. 準備模型">
+
+下載完成後，按鈕會變成「全部已安裝 ✓」。
 
 ## 🎬 使用
 

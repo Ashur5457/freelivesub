@@ -63,13 +63,37 @@ flowchart LR
 
 FreeLiveSub todavía no está en Chrome Web Store. Instálalo con «Cargar descomprimida»:
 
-| Paso | Cómo |
-|---|---|
-| 1. Descargar | Pulsa **[⬇ Descargar ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)** y descomprímelo (obtendrás la carpeta `freelivesub-main`). Si usas git: `git clone https://github.com/Ashur5457/freelivesub.git` |
-| 2. Activar el modo de desarrollador | Ve a `chrome://extensions` y activa «Modo de desarrollador» arriba a la derecha |
-| 3. Cargar | Pulsa «Cargar descomprimida» y elige la carpeta `freelivesub-main` (la que contiene directamente `manifest.json`) |
-| 4. Fijar el icono | Pulsa el botón de la pieza de puzle 🧩 en la barra y fija FreeLiveSub |
-| 5. Preparar los modelos | Haz clic derecho en el icono de FreeLiveSub → «Abrir panel lateral», elige los idiomas y pulsa **Descargar modelos que faltan** (solo una vez) |
+### 1. Descargar
+
+Pulsa **[⬇ Descargar ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)** y descomprímelo (obtendrás la carpeta `freelivesub-main`). Si usas git: `git clone https://github.com/Ashur5457/freelivesub.git`
+
+### 2. Activar el modo de desarrollador
+
+Ve a `chrome://extensions` y activa «Modo de desarrollador» arriba a la derecha
+
+<img src="docs/readme/step2.png" width="700" alt="2. Activar el modo de desarrollador">
+
+### 3. Cargar
+
+Pulsa «Cargar descomprimida» y elige la carpeta `freelivesub-main` (la que contiene directamente `manifest.json`)
+
+<img src="docs/readme/step3.png" width="640" alt="3. Cargar">
+
+<img src="docs/readme/step3b.png" width="560" alt="3. Cargar">
+
+### 4. Fijar el icono
+
+Pulsa el botón de la pieza de puzle 🧩 en la barra y fija FreeLiveSub
+
+<img src="docs/readme/step4.png" width="440" alt="4. Fijar el icono">
+
+### 5. Preparar los modelos
+
+Haz clic derecho en el icono de FreeLiveSub → «Abrir panel lateral», elige los idiomas y pulsa **Descargar modelos que faltan** (solo una vez)
+
+<img src="docs/readme/step5.png" width="320" alt="5. Preparar los modelos">
+
+Cuando termina la descarga, el botón cambia a «Todo instalado ✓».
 
 ## 🎬 Uso
 

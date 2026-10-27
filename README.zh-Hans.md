@@ -63,13 +63,37 @@ flowchart LR
 
 目前还没有上架 Chrome 应用商店，请用“加载已解压的扩展程序”安装：
 
-| 步骤 | 做法 |
-|---|---|
-| 1. 下载 | 点 **[⬇ 下载 ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)**，下载后解压（会得到 `freelivesub-main` 文件夹）。会用 git 的话也可以 `git clone https://github.com/Ashur5457/freelivesub.git` |
-| 2. 打开开发者模式 | 在地址栏输入 `chrome://extensions`，打开右上角的“开发者模式” |
-| 3. 加载 | 点“加载已解压的扩展程序”，选择 `freelivesub-main` 文件夹（里面要直接看到 `manifest.json`） |
-| 4. 固定图标 | 点工具栏的拼图按钮 🧩，把 FreeLiveSub 旁边的图钉点亮 |
-| 5. 准备模型 | 在 FreeLiveSub 图标上点右键 →“打开侧边栏”，选好语言后点 **下载缺少的模型**（只需一次） |
+### 1. 下载
+
+点 **[⬇ 下载 ZIP](https://github.com/Ashur5457/freelivesub/archive/refs/heads/main.zip)**，下载后解压（会得到 `freelivesub-main` 文件夹）。会用 git 的话也可以 `git clone https://github.com/Ashur5457/freelivesub.git`
+
+### 2. 打开开发者模式
+
+在地址栏输入 `chrome://extensions`，打开右上角的“开发者模式”
+
+<img src="docs/readme/step2.png" width="700" alt="2. 打开开发者模式">
+
+### 3. 加载
+
+点“加载已解压的扩展程序”，选择 `freelivesub-main` 文件夹（里面要直接看到 `manifest.json`）
+
+<img src="docs/readme/step3.png" width="640" alt="3. 加载">
+
+<img src="docs/readme/step3b.png" width="560" alt="3. 加载">
+
+### 4. 固定图标
+
+点工具栏的拼图按钮 🧩，把 FreeLiveSub 旁边的图钉点亮
+
+<img src="docs/readme/step4.png" width="440" alt="4. 固定图标">
+
+### 5. 准备模型
+
+在 FreeLiveSub 图标上点右键 →“打开侧边栏”，选好语言后点 **下载缺少的模型**（只需一次）
+
+<img src="docs/readme/step5.png" width="320" alt="5. 准备模型">
+
+下载完成后，按钮会变成“全部已安装 ✓”。
 
 ## 🎬 使用
 

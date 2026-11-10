@@ -76,14 +76,13 @@
 
 | 檔案 | 作用 |
 |---|---|
-| `manifest.json` | MV3 v0.12.3，名稱 FreeLiveSub；權限 `tabCapture`、`sidePanel`、`storage`、`scripting`、`activeTab`、`offscreen` |
+| `manifest.json` | MV3 v0.12.4，名稱 FreeLiveSub；權限 `tabCapture`、`sidePanel`、`storage`、`scripting`、`activeTab`、`offscreen` |
 | `i18n.js` | 介面文字對照表 `TSI18n`：每個 key 一行、6 欄固定順序（zh-Hant、en、zh-Hans、ja、ko、es）；`t(key, vars)`、`apply(root)` 處理 `data-i18n`／`data-i18n-title`；`uiLang: 'auto'` 依瀏覽器語言。**必須比 prefs.js 先載入** |
 | `icons/` | B3 圖示 16／32／48／128 px（16、32 是無尾巴、大字的小尺寸版）；由 `tools/make_icons.ps1` 產生（PowerShell＋System.Drawing，Yu Gothic Bold；執行：`powershell -File tools/make_icons.ps1 -OutDir icons`） |
 | `prefs.js` | 共用設定：預設值、**語言表**（`SOURCES` 來源 18 種、`TARGETS` 目標 39 種、`LANG_SELECTS`）、設定表單 HTML/CSS、load/set/watch/show/bind（側邊欄、懸浮框、sw、引擎都載入） |
-| `split.js` | 文字處理 `TSSplit`：tidy（只對 ja／zh 刪空格）、splitSentences（切句規則表）、joinParts；引擎和側邊欄實驗共用 |
+| `split.js` | 文字處理 `TSSplit`：tidy（只對 ja／zh 刪空格）、splitSentences（切句規則表）、joinParts；引擎用 |
 | `marks.js` | 收藏 `TSMarks`：storage key `marks`；build／add／remove、Google 翻譯／DeepL 連結、回到影片連結、AI 提問、匯出 .md |
 | `icons.js` | 內嵌 SVG 圖示 `TSIcons.icon(name, size)` |
-| `lab.js` | 側邊欄「實驗：Gemini Nano」（暫時性，文字只寫繁中）：檢查、下載、六條路線比較（內建一段連續的日文測試句＋最近 3 句收藏） |
 | `sw.js` | 總機：點圖示流程、建立引擎、轉送 render 給網頁、轉送 prefs 給引擎、☰ 開側邊欄 |
 | `offscreen.html` / `offscreen.js` | 背景引擎：擷取、辨識、翻譯、segment、state、紀錄 |
 | `overlay.js` | 懸浮字幕框（content script，Shadow DOM）：顯示字幕、⚙ 設定面板、拖曳縮放；只自己存位置大小（`overlayBox`） |
@@ -140,6 +139,7 @@
 - v0.12.2 實測（直接翻＋問答前文）：沒有再整句翻成上一句，「掉毛減少」「掉髮對策很好」變自然；但**問答前文會讓短句照抄上一句的句型**（あインスタ →「我聽到了，這是 Instagram。」），前文也沒幫上忙（抜け毛が → 減ったんですよ私 仍是「我變得更瘦了」）；約 15 句有 4 句混進日文被擋；畫面最亂的都是超過 80 字、沒重翻的長句；聽錯（毛 → 経営、老化 → 廊下）救不了
 - v0.12.3 **（待實測）** 品質重翻**不給前文**（兩種給法都實測有害，理由寫在 offscreen.js 註解；不要再加回來，除非有新的實測資料）；**長句分段重翻**：`translate()` 把講完的句子每一段的原文和快速翻譯記在 `fastParts`（WeakMap），`improve()` 一段一段交給 Nano（`improvePart()`），某段混進假名／俄文就沿用那段的快速翻譯，全部失敗才整句保留；拿掉 80 字上限，改成超過 `QUALITY_MAX_PARTS = 6` 段不重翻；改回一個基底 session＋每段 `clone()`（用完 destroy）。`nanoTurns`、`quality.raw` 已刪。已用假 Chrome 環境走完整流程（translate → enqueue → improve）測過 27 項。候選下一步：被擋的段落改走英文中轉再試一次
 - v0.12.3 實測：長句分段重翻明顯變通順（4 段的長句整句換掉）、短句沒再抄上一句、沒看到來不及重翻；約 12 句只有 1 段混進日文被擋（原文本身是聽錯的亂句）。剩下的錯誤是辨識聽錯（老化 → 廊下）和 Nano 自己翻錯，效益低，**品質優先定案在這版**；README 的「怎麼運作」與已知限制已同步改寫（v0.12.3 提交）
+- v0.12.4 移除側邊欄「實驗：Gemini Nano」卡片和 `lab.js`（品質優先已定案，使用者要求 GitHub 版不放）。需要再比較翻譯路線時，從 git 提交 `825970b` 拿回 `lab.js` 和 panel.html 的卡片（panel.html 也要加回 split.js）
 - v0.4.x 實測：點圖示 → 懸浮框、☰／右鍵開側邊欄都正常（背景引擎架構可用）
 - v0.4.0 **（待實測）** 辨識搬到背景引擎；顯示位置：懸浮框（預設）／側邊欄／兩者；懸浮框 ⚙ 設定面板（與側邊欄同一份 prefs）；☰ 開側邊欄（content script 訊息觸發 sidePanel.open，未驗證）；✕ = 停止並釋放分頁聲音
 

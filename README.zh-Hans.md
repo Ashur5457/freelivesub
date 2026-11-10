@@ -4,7 +4,7 @@
 
 **悬浮字幕框**、**18 种来源语言 × 39 种翻译语言**、**质量优先模式（Gemini Nano）**、**收藏有疑问的句子**、**和风主题**，界面支持六种语言。
 
-[![Version](https://img.shields.io/badge/version-v0.12.3-1D9E75)](manifest.json)
+[![Version](https://img.shields.io/badge/version-v0.12.4-1D9E75)](manifest.json)
 [![Chrome](https://img.shields.io/badge/Chrome-desktop-4285F4)](#-需求)
 [![On-device](https://img.shields.io/badge/on--device-100%25-2f8a4b)](#-隐私)
 [![License](https://img.shields.io/badge/license-MIT-5C4033)](LICENSE)
@@ -146,7 +146,6 @@ freelivesub/
 ├── marks.js             # 收藏的句子
 ├── i18n.js              # 界面文字（每句一行，六种语言并排）
 ├── icons.js             # 内嵌 SVG 图标
-├── lab.js               # 开发用：比较 Gemini Nano 翻译路线
 ├── icons/               # 扩展程序图标
 ├── tools/make_icons.ps1 # 生成图标（PowerShell）
 └── CLAUDE.md            # 开发文档：架构、踩过的坑、进度（繁体中文）

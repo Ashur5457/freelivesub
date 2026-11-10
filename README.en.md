@@ -4,7 +4,7 @@
 
 **Floating subtitle box**, **18 source × 39 target languages**, **Better-quality mode (Gemini Nano)**, **save questionable lines**, **Japanese-style themes**, and an interface in six languages.
 
-[![Version](https://img.shields.io/badge/version-v0.12.3-1D9E75)](manifest.json)
+[![Version](https://img.shields.io/badge/version-v0.12.4-1D9E75)](manifest.json)
 [![Chrome](https://img.shields.io/badge/Chrome-desktop-4285F4)](#-requirements)
 [![On-device](https://img.shields.io/badge/on--device-100%25-2f8a4b)](#-privacy)
 [![License](https://img.shields.io/badge/license-MIT-5C4033)](LICENSE)
@@ -146,7 +146,6 @@ freelivesub/
 ├── marks.js             # Saved lines
 ├── i18n.js              # Interface text (one line per string, six languages side by side)
 ├── icons.js             # Inline SVG icons
-├── lab.js               # Dev tool: compare Gemini Nano translation routes
 ├── icons/               # Extension icons
 ├── tools/make_icons.ps1 # Generates the icons (PowerShell)
 └── CLAUDE.md            # Developer notes: architecture, pitfalls, progress (Traditional Chinese)

@@ -4,7 +4,7 @@
 
 **フローティング字幕**、**元の言語 18 × 翻訳先 39 言語**、**品質優先モード（Gemini Nano）**、**気になる字幕の保存**、**和風テーマ**、表示言語は 6 言語に対応。
 
-[![Version](https://img.shields.io/badge/version-v0.12.3-1D9E75)](manifest.json)
+[![Version](https://img.shields.io/badge/version-v0.12.4-1D9E75)](manifest.json)
 [![Chrome](https://img.shields.io/badge/Chrome-desktop-4285F4)](#-動作環境)
 [![On-device](https://img.shields.io/badge/on--device-100%25-2f8a4b)](#-プライバシー)
 [![License](https://img.shields.io/badge/license-MIT-5C4033)](LICENSE)
@@ -146,7 +146,6 @@ freelivesub/
 ├── marks.js             # 保存した字幕
 ├── i18n.js              # 表示テキスト（1 行に 1 文、6 言語を並べて記述）
 ├── icons.js             # インライン SVG アイコン
-├── lab.js               # 開発用：Gemini Nano の翻訳経路の比較
 ├── icons/               # 拡張機能のアイコン
 ├── tools/make_icons.ps1 # アイコン生成（PowerShell）
 └── CLAUDE.md            # 開発メモ：構成、ハマりどころ、進捗（繁体字中国語）

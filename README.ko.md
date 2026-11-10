@@ -4,7 +4,7 @@
 
 **플로팅 자막 상자**, **원본 18개 × 번역 39개 언어**, **품질 우선 모드(Gemini Nano)**, **의심스러운 문장 저장**, **일본 전통 스타일 테마**, 6개 인터페이스 언어 지원.
 
-[![Version](https://img.shields.io/badge/version-v0.12.3-1D9E75)](manifest.json)
+[![Version](https://img.shields.io/badge/version-v0.12.4-1D9E75)](manifest.json)
 [![Chrome](https://img.shields.io/badge/Chrome-desktop-4285F4)](#-요구-사항)
 [![On-device](https://img.shields.io/badge/on--device-100%25-2f8a4b)](#-개인정보)
 [![License](https://img.shields.io/badge/license-MIT-5C4033)](LICENSE)
@@ -146,7 +146,6 @@ freelivesub/
 ├── marks.js             # 저장한 문장
 ├── i18n.js              # 인터페이스 문구(한 줄에 한 문장, 6개 언어를 나란히)
 ├── icons.js             # 인라인 SVG 아이콘
-├── lab.js               # 개발용: Gemini Nano 번역 경로 비교
 ├── icons/               # 확장 프로그램 아이콘
 ├── tools/make_icons.ps1 # 아이콘 생성(PowerShell)
 └── CLAUDE.md            # 개발 문서: 구조, 겪었던 문제, 진행 상황(번체 중국어)

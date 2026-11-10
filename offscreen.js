@@ -50,7 +50,7 @@ function log(msg) {
 
 // ---------- 文字與 segment ----------
 
-// 刪空格、切句子、接回譯文都在共用的 split.js（側邊欄的實驗工具也用同一套）
+// 刪空格、切句子、接回譯文都在 split.js
 const { tidy, splitSentences, joinParts } = TSSplit;
 
 function upsert(id, src, raw, final) {
@@ -117,7 +117,7 @@ function translateInterim(s) {
 
 // 先顯示快速翻譯，品質翻譯好了再換掉；一次只翻一句，排隊最多 QUALITY_BACKLOG 句、新的先翻，
 // 跟不上時舊句子就保留快速翻譯。Nano 不能用時在紀錄寫明原因，這個語言組合就只用快速翻譯。
-// 路線（v0.12.1 用側邊欄實驗比較六種翻法後決定）：
+// 路線（v0.12.1 用側邊欄實驗工具比較六種翻法後決定；工具已在 v0.12.4 移除，要用時從 git 825970b 拿回 lab.js）：
 //   目標是中文、英文（TSPrefs.qualityDirect）：Nano 直接翻成目標語言。不經英文，就沒有
 //     「ご飯 → rice → 稻」「作ってくれた → made it → 成功了」這類中轉錯誤；有時輸出簡體字（使用者可接受）。
 //   其他目標語言（沒有實測資料）：Nano 翻成英文 → Translator 翻成目標語言（有專用模型）。
@@ -133,7 +133,7 @@ const QUALITY_MAX_PARTS = 6;
 const QUALITY_MIN_RATIO = 0.6;
 // Nano 的回答只會是中文或英文，出現平假名、片假名、俄文字母就是沒翻完或亂掉
 const FOREIGN = /[ぁ-ゖァ-ヺЀ-ӿ]/;
-// 提示和側邊欄實驗的「無前文」路線一字不差（小模型對措辭敏感，改字要重新實測）
+// 提示和當時實驗的「無前文」路線一字不差（小模型對措辭敏感，改字要重新實測）
 const nanoPrompt = (to) => `You translate live speech-recognition subtitles into ${TSPrefs.targetName(to)} (${to}). ` +
   'Each user message is one subtitle line; earlier turns are the lines just before it. ' +
   'The text comes from automatic speech recognition and may contain misheard words. ' +

@@ -4,7 +4,7 @@
 
 **Cuadro de subtítulos flotante**, **18 idiomas de origen × 39 de destino**, **modo Calidad mejor (Gemini Nano)**, **guardar frases dudosas**, **temas de estilo japonés** e interfaz en seis idiomas.
 
-[![Version](https://img.shields.io/badge/version-v0.12.3-1D9E75)](manifest.json)
+[![Version](https://img.shields.io/badge/version-v0.12.4-1D9E75)](manifest.json)
 [![Chrome](https://img.shields.io/badge/Chrome-desktop-4285F4)](#-requisitos)
 [![On-device](https://img.shields.io/badge/on--device-100%25-2f8a4b)](#-privacidad)
 [![License](https://img.shields.io/badge/license-MIT-5C4033)](LICENSE)
@@ -146,7 +146,6 @@ freelivesub/
 ├── marks.js             # Frases guardadas
 ├── i18n.js              # Textos de la interfaz (una línea por texto, seis idiomas en paralelo)
 ├── icons.js             # Iconos SVG en línea
-├── lab.js               # Herramienta de desarrollo: comparar rutas de traducción con Gemini Nano
 ├── icons/               # Iconos de la extensión
 ├── tools/make_icons.ps1 # Genera los iconos (PowerShell)
 └── CLAUDE.md            # Notas de desarrollo: arquitectura, problemas encontrados, progreso (chino tradicional)

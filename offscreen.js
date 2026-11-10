@@ -76,15 +76,19 @@ function prune(results) {
 
 // ---------- 翻譯 ----------
 
+// 講完的句子 → 每一段的原文和快速翻譯。品質重翻照這些段落一段一段翻，某段沒翻好就沿用它的快速翻譯。
+const fastParts = new WeakMap();
+
 async function translate(s) {
   const translator = translators[pairKey()];
   if (!translator) return;   // 來源和目標相同（不翻譯），或模型還沒準備好
   const my = (s.seq = ++seqNo);
   const parts = splitSentences(s.raw, srcTr());
-  const trans = joinParts(await Promise.all(parts.map((p) => translator.translate(p))), prefs.target);
+  const outs = await Promise.all(parts.map((p) => translator.translate(p)));
   if (s.seq !== my) return;   // 這段期間又送出了更新的翻譯，這個結果作廢
-  s.trans = trans;
+  s.trans = joinParts(outs, prefs.target);
   s.q = false;
+  if (s.final) fastParts.set(s, parts.map((src, k) => ({ src, fast: outs[k] })));
   if (s.final && parts.length > 1) log(t('log.split', { n: parts.length, parts: parts.join(' / ') }));
   render();
   if (s.final) enqueueQuality(s);
@@ -111,27 +115,36 @@ function translateInterim(s) {
 
 // ---------- 品質優先：講完的句子再用 Gemini Nano 重翻 ----------
 
-// 路線：Gemini Nano（來源 → 英文，官方支援）→ Translator（英文 → 目標，有專用模型）。
-// 實測 Nano 直接輸出中文不可靠（會混簡體、日文、俄文），所以最後一步一定交給 Translator。
 // 先顯示快速翻譯，品質翻譯好了再換掉；一次只翻一句，排隊最多 QUALITY_BACKLOG 句、新的先翻，
 // 跟不上時舊句子就保留快速翻譯。Nano 不能用時在紀錄寫明原因，這個語言組合就只用快速翻譯。
+// 路線（v0.12.1 用側邊欄實驗比較六種翻法後決定）：
+//   目標是中文、英文（TSPrefs.qualityDirect）：Nano 直接翻成目標語言。不經英文，就沒有
+//     「ご飯 → rice → 稻」「作ってくれた → made it → 成功了」這類中轉錯誤；有時輸出簡體字（使用者可接受）。
+//   其他目標語言（沒有實測資料）：Nano 翻成英文 → Translator 翻成目標語言（有專用模型）。
+// 不給前文，兩種給法都試過、都有害：
+//   v0.12.0 放在同一則訊息的 <context> 區塊：短句被翻成前一句的內容。
+//   v0.12.2 做成之前的問答：短句照抄上一句的句型（あインスタ →「我聽到了，這是 Instagram」），也沒看到前文幫上忙的例子。
+// 長句：照快速翻譯切好的段落（fastParts）一段一段翻再接回去。整句交給 Nano 會被濃縮（400 字變兩句），
+//   也容易沒翻完。段數太多（超過 QUALITY_MAX_PARTS）就不重翻，免得一句占住好幾秒。
+// 檢查：某一段的回答混進假名或俄文字母（沒翻完）→ 那一段沿用快速翻譯；整句比快速翻譯短太多（不到 6 成）→ 不換。
+//   「比快速翻譯長太多就不換」試過（v0.12.1），實際擋掉的都是比較完整的重翻，已拿掉。
 const QUALITY_BACKLOG = 3;
-// 實測：一段 400 字的長句交給 Nano，會被濃縮成兩句，反而蓋掉比較完整的快速翻譯（快速翻譯有先切句子）。
-//   太長的句子不重翻；重翻結果比快速翻譯短太多（不到 6 成）也不換，視為漏了內容。
-const QUALITY_MAX_CHARS = 80;
+const QUALITY_MAX_PARTS = 6;
 const QUALITY_MIN_RATIO = 0.6;
-const NANO_PROMPT = 'You translate live speech-recognition subtitles into English. ' +
-  'Each message has optional <context> (earlier lines, for reference only, never translate them) and one <line> to translate. ' +
-  'The text comes from automatic speech recognition and may contain misheard words; use the context to infer the intended meaning. ' +
-  'Reply with the English translation of <line> only: no quotes, no notes, no context.';
-const nanoMessage = (src, before) => (before.length
-  ? `<context>\n${before.join('\n')}\n</context>\n<line>${src}</line>`
-  : `<line>${src}</line>`);
+// Nano 的回答只會是中文或英文，出現平假名、片假名、俄文字母就是沒翻完或亂掉
+const FOREIGN = /[ぁ-ゖァ-ヺЀ-ӿ]/;
+// 提示和側邊欄實驗的「無前文」路線一字不差（小模型對措辭敏感，改字要重新實測）
+const nanoPrompt = (to) => `You translate live speech-recognition subtitles into ${TSPrefs.targetName(to)} (${to}). ` +
+  'Each user message is one subtitle line; earlier turns are the lines just before it. ' +
+  'The text comes from automatic speech recognition and may contain misheard words. ' +
+  'Reply with the translation of the latest line only: no quotes, no notes.' +
+  (to === 'en' ? " Your English will be machine-translated afterwards, so prefer specific, unambiguous words (for example 'TV show', not 'program')." : '');
 
 const quality = { key: '', session: null, enTr: null, blocked: '', busy: false, queue: [] };
 const qualityKey = () => `${srcTr()}>${prefs.target}`;
 // 來源是英文時本來就只有一步，品質優先沒有幫助
 const qualityWanted = () => prefs.quality === 'quality' && !sameLang() && srcTr() !== 'en' && quality.blocked !== qualityKey();
+const nanoOut = () => (TSPrefs.qualityDirect(prefs.target) ? prefs.target : 'en');   // Nano 要輸出的語言
 
 // 翻譯不需要創意：每次都挑最可能的答案（topK 1），結果穩定、也比較不會自己加戲。
 // 萬一這個 Chrome 不接受這兩個參數，就用預設值建立。
@@ -143,23 +156,33 @@ async function createNano(opts) {
   }
 }
 
+// 宣告輸入、輸出語言。官方沒宣告支援的輸出語言（例如中文）就不宣告，實測照樣能用。
+async function nanoIO(out) {
+  const input = { expectedInputs: [{ type: 'text', languages: [srcTr()] }] };
+  const declared = { ...input, expectedOutputs: [{ type: 'text', languages: [out] }] };
+  const known = await LanguageModel.availability(declared).catch(() => 'unavailable');
+  const io = known === 'unavailable' ? input : declared;
+  const state = await LanguageModel.availability(io);
+  if (state !== 'available') throw new Error(t('err.nanoState', { state, hint: t('err.hint') }));
+  return io;
+}
+
 async function ensureQuality() {
   if (quality.key === qualityKey() && quality.session) return;
   quality.session?.destroy();
   Object.assign(quality, { key: '', session: null, enTr: null });
   if (!('LanguageModel' in self)) throw new Error(t('err.noNano'));
-  const io = { expectedInputs: [{ type: 'text', languages: [srcTr()] }], expectedOutputs: [{ type: 'text', languages: ['en'] }] };
-  const state = await LanguageModel.availability(io);
-  if (state !== 'available') throw new Error(t('err.nanoState', { state, hint: t('err.hint') }));
-  if (prefs.target !== 'en') {
+  const out = nanoOut();
+  const io = await nanoIO(out);
+  if (out !== prefs.target) {
     const tr = { sourceLanguage: 'en', targetLanguage: prefs.target };
     const a = await Translator.availability(tr);
     if (a !== 'available') throw new Error(t('err.trModel', { pair: `English → ${TSPrefs.targetName(prefs.target)}`, state: a, hint: t('err.hint') }));
     quality.enTr = await Translator.create(tr);
   }
-  quality.session = await createNano({ ...io, initialPrompts: [{ role: 'system', content: NANO_PROMPT }] });
+  quality.session = await createNano({ ...io, initialPrompts: [{ role: 'system', content: nanoPrompt(out) }] });
   quality.key = qualityKey();
-  log(t('log.qualityOn', { pair: pairLabel() }));
+  log(t('log.qualityOn', { pair: pairLabel(), route: quality.enTr ? 'Gemini Nano → English → Translator' : 'Gemini Nano' }));
   render();   // 側邊欄的「目前使用」改成品質優先
 }
 
@@ -171,7 +194,8 @@ function engineMode() {
 }
 
 function enqueueQuality(s) {
-  if (!qualityWanted() || s.src.length > QUALITY_MAX_CHARS) return;
+  const n = fastParts.get(s)?.length ?? 0;
+  if (!qualityWanted() || !n || n > QUALITY_MAX_PARTS) return;
   quality.queue.push(s);
   quality.queue.splice(0, Math.max(0, quality.queue.length - QUALITY_BACKLOG));   // 跟不上：丟掉最舊的
   runQuality();
@@ -187,6 +211,25 @@ async function runQuality() {
   }
 }
 
+// 每一段都從只有系統提示的對話複製一份來問，各段互不影響
+async function askNano(src) {
+  const session = await quality.session.clone();
+  try {
+    return (await session.prompt(src)).trim();
+  } finally {
+    session.destroy();
+  }
+}
+
+// 重翻一段；沒翻好回傳 null（呼叫的人會沿用這一段的快速翻譯）
+async function improvePart(p) {
+  const raw = await askNano(p.src);
+  if (!raw) return null;
+  if (!FOREIGN.test(raw)) return quality.enTr ? quality.enTr.translate(raw) : raw;
+  log(t('log.qualityForeign', { src: p.src, out: raw }));
+  return null;
+}
+
 async function improve(s) {
   try {
     await ensureQuality();
@@ -196,14 +239,15 @@ async function improve(s) {
     log(t('log.qualityOff', { reason: e.message }));
     return render();
   }
-  const i = segs.indexOf(s);
-  if (i < 0) return;   // 已經被清掉了
-  const my = s.seq;
-  const before = segs.slice(Math.max(0, i - 2), i).filter((x) => x.final).map((x) => x.src);
+  if (!segs.includes(s)) return;   // 已經被清掉了
+  const parts = fastParts.get(s), my = s.seq, outs = [];
   try {
-    const en = await (await quality.session.clone()).prompt(nanoMessage(s.src, before));
-    const out = quality.enTr ? await quality.enTr.translate(en.trim()) : en.trim();
-    if (s.seq !== my || !out) return;   // 這段期間翻譯被更新了（例如換了目標語言），作廢
+    for (const p of parts) {
+      outs.push(await improvePart(p));
+      if (s.seq !== my) return;   // 這段期間翻譯被更新了（例如換了目標語言），作廢
+    }
+    if (outs.every((o) => o === null)) return;   // 沒有一段翻好，保留快速翻譯
+    const out = joinParts(outs.map((o, k) => o ?? parts[k].fast), prefs.target);
     if (out.length < s.trans.length * QUALITY_MIN_RATIO) return log(t('log.qualityShort', { src: s.src }));
     s.trans = out;
     s.q = true;

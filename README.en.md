@@ -4,7 +4,7 @@
 
 **Floating subtitle box**, **18 source × 39 target languages**, **Better-quality mode (Gemini Nano)**, **save questionable lines**, **Japanese-style themes**, and an interface in six languages.
 
-[![Version](https://img.shields.io/badge/version-v0.12.0-1D9E75)](manifest.json)
+[![Version](https://img.shields.io/badge/version-v0.12.3-1D9E75)](manifest.json)
 [![Chrome](https://img.shields.io/badge/Chrome-desktop-4285F4)](#-requirements)
 [![On-device](https://img.shields.io/badge/on--device-100%25-2f8a4b)](#-privacy)
 [![License](https://img.shields.io/badge/license-MIT-5C4033)](LICENSE)
@@ -31,7 +31,7 @@ FreeLiveSub uses only **Chrome's built-in speech recognition and translation**, 
 - **Floating subtitle box**: drag it, resize it from any corner, and it stays visible in fullscreen. Scroll up to see the last 50 lines.
 - **Many languages**: 18 source languages (Japanese, English, Chinese, Korean, Spanish, French, German…) × 39 target languages. What actually works depends on your Chrome; the side panel marks each one ✓ downloaded / ⬇ downloadable / ✕ not supported.
 - **Long-sentence splitting**: recognized text has no punctuation and several sentences often run together. FreeLiveSub splits them before translating so it doesn't stop after the first sentence (with dedicated rules for Japanese).
-- **Better-quality mode ✨**: shows the fast translation first, then re-translates finished lines with Gemini Nano and swaps them in. It handles casual speech and context better.
+- **Better-quality mode ✨**: shows the fast translation first, then re-translates finished lines with Gemini Nano and swaps them in. It handles casual speech better.
 - **Save questionable lines ⭐**: check them in Google Translate or DeepL with one click, copy them as an AI prompt (with the preceding lines), or jump back to that moment in the video. Export to Markdown.
 - **Appearance**: Cha (tea) and Sumi (ink) themes or your own colors, 12 traditional Japanese text colors, separate color and size for the original and the translation, or show only one of them.
 - **Interface languages**: 繁中 / English / 日本語 / 简中 / 한국어 / Español, following Chrome's language by default.
@@ -44,9 +44,8 @@ flowchart LR
   SR --> SPLIT["Split sentences<br/>split.js"]
   SPLIT --> TR["Chrome Translator<br/>fast translation"]
   TR --> SUB["Floating box /<br/>side panel"]
-  SPLIT -. Better quality .-> NANO["Gemini Nano<br/>source → English"]
-  NANO -.-> TR2["Translator<br/>English → target"]
-  TR2 -. swap in ✨ .-> SUB
+  SPLIT -. Better quality .-> NANO["Gemini Nano<br/>re-translates part by part"]
+  NANO -. swap in ✨ .-> SUB
 ```
 
 | Step | Uses | Runs in |
@@ -57,7 +56,7 @@ flowchart LR
 | Better quality | Prompt API (Gemini Nano) + Translator API | On-device |
 
 > [!TIP]
-> Testing showed that Chrome's Japanese → Traditional Chinese translation actually goes through English. So Better-quality mode takes the route "Gemini Nano translates into English → Translator translates into the target language": Nano handles the weakest step, and the last step is always a dedicated model for the target language, so no Simplified Chinese or other languages slip in.
+> Testing showed that Chrome's Japanese → Traditional Chinese translation actually goes through English, which causes mistakes (for example ご飯 "meal" → rice → 稻 "rice plant"). So when the target is Chinese or English, Better-quality mode has Gemini Nano translate **directly**, without English in between, and long lines are re-translated part by part. Nano sometimes outputs Simplified Chinese; if a part comes back untranslated (still Japanese), that part keeps the fast translation. For other target languages the route is "Nano translates into English → Translator translates into the target language".
 
 ## 🚀 Install
 
@@ -120,7 +119,7 @@ Chrome downloads and manages the models and shares them across all sites and ext
 
 - **Recognition errors can't be fixed**: for example, 美容院 (beauty salon) misheard as 病院 (hospital). There's no glossary yet.
 - **No context in fast mode**: it translates one line at a time, so short lines and casual speech are often wrong. Better quality helps, but adds 1–3 s per line and uses more CPU.
-- **Better quality only handles lines up to 80 characters**: a small model tends to condense long paragraphs, so those keep the fast translation.
+- **Better quality handles up to 6 parts per line**: longer lines keep the fast translation, so one line doesn't hold up the ones after it. Re-translation doesn't look at surrounding lines (in testing, giving the small model earlier lines made it translate those lines instead).
 - **Chrome's own pages** (`chrome://…`) can't show the floating box.
 - **Side-panel mode**: after the background script has been idle for a while, the first click may not open the side panel. Click again.
 - Mostly tested with Japanese and English; other languages haven't been tested much.

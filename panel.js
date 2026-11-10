@@ -95,7 +95,7 @@ function neededModels() {
   if (!same) list.push({ label: t('model.tr', { pair: `${src.name} → ${to}` }), check: () => trAvail(src.tr, prefs.target) });
   if (qualityOn(src, same)) {
     list.push({ label: t('model.nano'), check: () => nanoAvail(src.tr) });
-    if (prefs.target !== 'en') list.push({ label: t('model.enTr', { pair: `English → ${to}` }), check: () => trAvail('en', prefs.target) });
+    if (!TSPrefs.qualityDirect(prefs.target)) list.push({ label: t('model.enTr', { pair: `English → ${to}` }), check: () => trAvail('en', prefs.target) });
   }
   return list;
 }
@@ -138,7 +138,8 @@ function createTranslator(src, tgt) {
   return Translator.create({ sourceLanguage: src, targetLanguage: tgt, monitor }).then(() => 'OK');
 }
 
-// 品質優先要的模型：Gemini Nano（來源 → 英文）、Translator（英文 → 目標）。和其他下載在同一次點擊裡發出。
+// 品質優先要的模型：Gemini Nano；目標語言不是 Nano 直接翻的（見 TSPrefs.qualityDirect）再加 Translator（英文 → 目標）。
+// 和其他下載在同一次點擊裡發出。
 function qualityJobs(from) {
   const nanoMonitor = (m) => m.addEventListener('downloadprogress', (e) => {
     const p = Math.round(e.loaded * 100);
@@ -148,7 +149,7 @@ function qualityJobs(from) {
     ? LanguageModel.create({ ...nanoIO(from), monitor: nanoMonitor }).then((s) => { s.destroy(); return 'OK'; })
     : Promise.reject(new Error(t('err.noNano')));
   const jobs = [['Gemini Nano', nano]];
-  if (prefs.target !== 'en') jobs.push([t('job.tr', { pair: `en→${prefs.target}` }), createTranslator('en', prefs.target)]);
+  if (!TSPrefs.qualityDirect(prefs.target)) jobs.push([t('job.tr', { pair: `en→${prefs.target}` }), createTranslator('en', prefs.target)]);
   return jobs;
 }
 

@@ -76,14 +76,14 @@
 
 | 檔案 | 作用 |
 |---|---|
-| `manifest.json` | MV3 v0.12.0，名稱 FreeLiveSub；權限 `tabCapture`、`sidePanel`、`storage`、`scripting`、`activeTab`、`offscreen` |
+| `manifest.json` | MV3 v0.12.3，名稱 FreeLiveSub；權限 `tabCapture`、`sidePanel`、`storage`、`scripting`、`activeTab`、`offscreen` |
 | `i18n.js` | 介面文字對照表 `TSI18n`：每個 key 一行、6 欄固定順序（zh-Hant、en、zh-Hans、ja、ko、es）；`t(key, vars)`、`apply(root)` 處理 `data-i18n`／`data-i18n-title`；`uiLang: 'auto'` 依瀏覽器語言。**必須比 prefs.js 先載入** |
 | `icons/` | B3 圖示 16／32／48／128 px（16、32 是無尾巴、大字的小尺寸版）；由 `tools/make_icons.ps1` 產生（PowerShell＋System.Drawing，Yu Gothic Bold；執行：`powershell -File tools/make_icons.ps1 -OutDir icons`） |
 | `prefs.js` | 共用設定：預設值、**語言表**（`SOURCES` 來源 18 種、`TARGETS` 目標 39 種、`LANG_SELECTS`）、設定表單 HTML/CSS、load/set/watch/show/bind（側邊欄、懸浮框、sw、引擎都載入） |
 | `split.js` | 文字處理 `TSSplit`：tidy（只對 ja／zh 刪空格）、splitSentences（切句規則表）、joinParts；引擎和側邊欄實驗共用 |
 | `marks.js` | 收藏 `TSMarks`：storage key `marks`；build／add／remove、Google 翻譯／DeepL 連結、回到影片連結、AI 提問、匯出 .md |
 | `icons.js` | 內嵌 SVG 圖示 `TSIcons.icon(name, size)` |
-| `lab.js` | 側邊欄「實驗：Gemini Nano」（暫時性，文字只寫繁中）：檢查、下載、三條路線比較 |
+| `lab.js` | 側邊欄「實驗：Gemini Nano」（暫時性，文字只寫繁中）：檢查、下載、六條路線比較（內建一段連續的日文測試句＋最近 3 句收藏） |
 | `sw.js` | 總機：點圖示流程、建立引擎、轉送 render 給網頁、轉送 prefs 給引擎、☰ 開側邊欄 |
 | `offscreen.html` / `offscreen.js` | 背景引擎：擷取、辨識、翻譯、segment、state、紀錄 |
 | `overlay.js` | 懸浮字幕框（content script，Shadow DOM）：顯示字幕、⚙ 設定面板、拖曳縮放；只自己存位置大小（`overlayBox`） |
@@ -133,11 +133,19 @@
 - v0.11.0 **（待實測）** 翻譯品質設定 `prefs.quality`：fast（預設，只用 Translator）／quality（講完的句子先顯示快速翻譯，再用「Gemini Nano 來源→英文 → Translator 英文→目標」重翻並換掉，segment 標 `q:true`、畫面加 ✨）。引擎：`ensureQuality()` 檢查並建立 Nano session（`temperature 0.1, topK 1`，不接受就用預設）與 en→目標 Translator；`enqueueQuality()` 一次一句、排隊最多 3 句、新的先翻；`s.seq` 變了就作廢；Nano 不能用時 `quality.blocked` 記住該語言組合並在紀錄說明、退回快速。來源是英文或同語言時不啟用。側邊欄「準備模型」選品質優先時一併下載 Nano 與 en→目標。lab 比較按鈕防連按。已用假模型在引擎測過換掉、排隊順序、退回
 - v0.11.0 實測：**背景引擎（offscreen）可以跑 Gemini Nano**（紀錄出現「品質優先已啟用」）；但 400 字長句被 Nano 濃縮成兩句、蓋掉較完整的快速翻譯；英文中轉仍會把「番組」→program→「程式」；使用者連按「準備模型」5 次（看不出有沒有裝好）
 - v0.12.0 **（待實測）** 引擎：`QUALITY_MAX_CHARS = 80`（太長不重翻）、`QUALITY_MIN_RATIO = 0.6`（重翻比快速翻譯短太多就不換，記 `log.qualityShort`）；snapshot 多送 `mode`（`engineMode()`：fast／quality／qualityPending／blocked）。側邊欄語言卡加**模型狀態清單** `neededModels()`（依設定列出需要的模型：語音、翻譯、品質優先時加 Nano 與 en→目標，各自 ✓／⬇／✕＋文字）、「目前使用」（引擎回報的 mode）；準備模型按鈕依狀態顯示「下載缺少的模型／下載中…／全部已安裝 ✓／有模型不支援」，非可下載狀態一律停用（解決連按）；Nano 下載紀錄改「下載 Gemini Nano {p}%」。已在假環境測過各狀態並截圖
+- v0.12.0 實測（品質優先、標準速度）：**把前兩句放在 `<context>` 一起給 Nano，短句會被翻成「前一句的內容」**（連續三句都在講上一句的下午茶照片），而且比快速翻譯長，舊的檢查只擋太短所以蓋掉了正確的翻譯；另有英文中轉錯誤（えご飯 → rice →「稻」）、人名讀錯（三宅 → Miyuki）、節目名整串聽錯
+- v0.12.1 **（待實測）** 引擎：品質重翻不再給前文（`nanoMessage(src)` 只有 `<line>`）；`qualityReject()` 多擋「比快速翻譯長超過 2 倍」（`QUALITY_MAX_RATIO`，快速翻譯太短時以 `QUALITY_FLOOR = 4` 字為基準），記 `log.qualityLong`。`lab.js` 改成六條路線：1 快速／2 舊品質（前文區塊，重現問題用）／3、4 英文中轉（無前文、問答前文）／5、6 Nano 直接翻（無前文、問答前文）。「問答前文」＝每句新建 session，把前兩句做成 user／assistant 對話放進 `initialPrompts`，只送最新一句；英文提示要求用沒有歧義的字（TV show 而不是 program）；直接翻的結果含假名或俄文字母會標 ⚠（正式使用時要退回快速翻譯）。已用假 Chrome 環境測過引擎（換掉／太長／太短／一個字）和六條路線的前文內容。（比較結果與後續見下兩條）
+- v0.12.1 實測（六條路線，7 句）：路線 2 重現問題（兩句把前一句翻進來、一句吐出亂碼）；**問答前文（路線 4、6）沒有混入前文**；直接翻（5、6）最自然（吃饭、饭类更合适），7 句有 1 句殘留假名（含人名的長句）；每句 0.5～1.4 秒（每句新建 session 不慢，第一次約 17～19 秒是載入模型）。所有路線都翻錯：どっちかにしてあげてえ、三宅的讀音。品質優先（英文中轉、無前文）看影片：「作ってくれた → made it → 成功了」「抜け毛が／減ったんですよ私 → 脫水／我變瘦了」（缺前文）；**「長太多就不換」擋掉的 4 句都是比較完整的重翻**（あインスタ → Instagram 也被擋）
+- v0.12.2 **（待實測）** 品質優先改成路線 6：目標是中文／英文（`TSPrefs.qualityDirect`）時 **Nano 直接翻成目標語言**，其他目標維持 Nano → 英文 → Translator；前文一律用問答（`nanoTurns()`：前兩句裡已重翻過的，`quality.raw` WeakMap 記 segment → Nano 的回答，換語言組合時重來）；每句 `askNano()` 新建 session、用完 destroy；Nano 的回答含假名或俄文字母（`FOREIGN`）就不換，記 `log.qualityForeign`；拿掉「長太多就不換」（`log.qualityLong` 已刪）；太短的檢查保留。官方沒宣告的輸出語言（中文）不帶 `expectedOutputs`（`nanoIO()`）。側邊欄模型清單：直接翻的目標不再列「英文 → 目標」。`log.qualityOn` 會寫出路線。已用假 Chrome 環境測過引擎 22 項（直接翻、前文順序、英文中轉、換語言）。
+- v0.12.2 實測（直接翻＋問答前文）：沒有再整句翻成上一句，「掉毛減少」「掉髮對策很好」變自然；但**問答前文會讓短句照抄上一句的句型**（あインスタ →「我聽到了，這是 Instagram。」），前文也沒幫上忙（抜け毛が → 減ったんですよ私 仍是「我變得更瘦了」）；約 15 句有 4 句混進日文被擋；畫面最亂的都是超過 80 字、沒重翻的長句；聽錯（毛 → 経営、老化 → 廊下）救不了
+- v0.12.3 **（待實測）** 品質重翻**不給前文**（兩種給法都實測有害，理由寫在 offscreen.js 註解；不要再加回來，除非有新的實測資料）；**長句分段重翻**：`translate()` 把講完的句子每一段的原文和快速翻譯記在 `fastParts`（WeakMap），`improve()` 一段一段交給 Nano（`improvePart()`），某段混進假名／俄文就沿用那段的快速翻譯，全部失敗才整句保留；拿掉 80 字上限，改成超過 `QUALITY_MAX_PARTS = 6` 段不重翻；改回一個基底 session＋每段 `clone()`（用完 destroy）。`nanoTurns`、`quality.raw` 已刪。已用假 Chrome 環境走完整流程（translate → enqueue → improve）測過 27 項。候選下一步：被擋的段落改走英文中轉再試一次
+- v0.12.3 實測：長句分段重翻明顯變通順（4 段的長句整句換掉）、短句沒再抄上一句、沒看到來不及重翻；約 12 句只有 1 段混進日文被擋（原文本身是聽錯的亂句）。剩下的錯誤是辨識聽錯（老化 → 廊下）和 Nano 自己翻錯，效益低，**品質優先定案在這版**；README 的「怎麼運作」與已知限制已同步改寫（v0.12.3 提交）
 - v0.4.x 實測：點圖示 → 懸浮框、☰／右鍵開側邊欄都正常（背景引擎架構可用）
 - v0.4.0 **（待實測）** 辨識搬到背景引擎；顯示位置：懸浮框（預設）／側邊欄／兩者；懸浮框 ⚙ 設定面板（與側邊欄同一份 prefs）；☰ 開側邊欄（content script 訊息觸發 sidePanel.open，未驗證）；✕ = 停止並釋放分頁聲音
 
 ### 使用者的決定
 - 術語表先不做；側邊欄保留最近 50 句
+- 2026-11-10 譯文出現簡體字可以接受（使用者看得懂）→ Nano 直接翻中文不需要簡轉繁，只要擋「沒翻完（含假名）」和其他文字
 - 點圖示預設出懸浮框，可選側邊欄；懸浮框要有 ViiTor 式樣式設定
 - 上架 GitHub 等功能測試穩定後再說（Chrome 商店需一次性 5 美元開發者費）
 - 2026-10-22 決定公開到 GitHub；圖示選「B3 兩個對話框」（綠色對話框寫「あ」，前方白色對話框寫「A」，青綠 #1D9E75／#0F6E56）；正式圖示要用粗體日文字型重畫

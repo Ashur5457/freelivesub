@@ -46,6 +46,9 @@ globalThis.TSPrefs ??= (() => {
   ].map(([tr, name]) => ({ tr, name }));
   const source = (sr) => SOURCES.find((l) => l.sr === sr) ?? SOURCES[0];
   const targetName = (tr) => TARGETS.find((l) => l.tr === tr)?.name ?? tr;
+  // 品質優先時，Gemini Nano 直接翻成這些目標語言（實測過）；其他語言先翻成英文再交給 Translator
+  const QUALITY_DIRECT = new Set(['zh-Hant', 'zh', 'en']);
+  const qualityDirect = (tr) => QUALITY_DIRECT.has(tr);
 
   const options = (list, key) =>
     list.map((l) => `<option value="${l[key]}" data-name="${l.name}">${l.name}</option>`).join('');
@@ -287,5 +290,5 @@ globalThis.TSPrefs ??= (() => {
   }
 
   return { DEFAULT, SOURCES, TARGETS, LANG_SELECTS, FORM_HTML: FORM, FORM_LOOK, FORM_DISPLAY, FORM_CSS, HELP_HTML, HELP_CSS,
-           source, targetName, themeVars, paint, load, set, update, watch, show, bind };
+           source, targetName, qualityDirect, themeVars, paint, load, set, update, watch, show, bind };
 })();

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "FreeLiveSub",
-  "version": "0.12.0",
+  "version": "0.12.3",
   "description": "Free live translated subtitles for any tab, 100% on-device with Chrome's built-in speech recognition and translation.",
   "permissions": ["tabCapture", "sidePanel", "storage", "scripting", "activeTab", "offscreen"],
   "background": { "service_worker": "sw.js" },

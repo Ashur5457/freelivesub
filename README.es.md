@@ -4,7 +4,7 @@
 
 **Cuadro de subtítulos flotante**, **18 idiomas de origen × 39 de destino**, **modo Calidad mejor (Gemini Nano)**, **guardar frases dudosas**, **temas de estilo japonés** e interfaz en seis idiomas.
 
-[![Version](https://img.shields.io/badge/version-v0.12.0-1D9E75)](manifest.json)
+[![Version](https://img.shields.io/badge/version-v0.12.3-1D9E75)](manifest.json)
 [![Chrome](https://img.shields.io/badge/Chrome-desktop-4285F4)](#-requisitos)
 [![On-device](https://img.shields.io/badge/on--device-100%25-2f8a4b)](#-privacidad)
 [![License](https://img.shields.io/badge/license-MIT-5C4033)](LICENSE)
@@ -31,7 +31,7 @@ FreeLiveSub usa **solo el reconocimiento de voz y la traducción integrados en C
 - **Cuadro de subtítulos flotante**: arrástralo, cambia su tamaño desde cualquier esquina y sigue visible a pantalla completa. Desplázate hacia arriba para ver las últimas 50 líneas.
 - **Muchos idiomas**: 18 idiomas de origen (japonés, inglés, chino, coreano, español, francés, alemán…) × 39 de destino. Lo que funciona depende de tu Chrome; el panel lateral marca cada uno como ✓ descargado / ⬇ descargable / ✕ no compatible.
 - **División de frases largas**: el texto reconocido no tiene puntuación y suele juntar varias frases. FreeLiveSub las separa antes de traducir para no quedarse en la primera (con reglas específicas para el japonés).
-- **Modo Calidad mejor ✨**: muestra primero la traducción rápida y luego vuelve a traducir las frases terminadas con Gemini Nano y las sustituye. Entiende mejor el lenguaje coloquial y el contexto.
+- **Modo Calidad mejor ✨**: muestra primero la traducción rápida y luego vuelve a traducir las frases terminadas con Gemini Nano y las sustituye. Entiende mejor el lenguaje coloquial.
 - **Guardar frases dudosas ⭐**: compruébalas en Google Traductor o DeepL con un clic, cópialas como pregunta para una IA (con las frases anteriores) o vuelve a ese momento del vídeo. Exporta a Markdown.
 - **Apariencia**: temas Cha (té) y Sumi (tinta) o tus propios colores, 12 colores tradicionales japoneses para el texto, color y tamaño independientes para el original y la traducción, o mostrar solo uno de los dos.
 - **Idiomas de la interfaz**: 繁中 / English / 日本語 / 简中 / 한국어 / Español; por defecto sigue el idioma de Chrome.
@@ -44,9 +44,8 @@ flowchart LR
   SR --> SPLIT["Dividir frases<br/>split.js"]
   SPLIT --> TR["Chrome Translator<br/>traducción rápida"]
   TR --> SUB["Cuadro flotante /<br/>panel lateral"]
-  SPLIT -. Calidad mejor .-> NANO["Gemini Nano<br/>origen → inglés"]
-  NANO -.-> TR2["Translator<br/>inglés → destino"]
-  TR2 -. sustituir ✨ .-> SUB
+  SPLIT -. Calidad mejor .-> NANO["Gemini Nano<br/>retraduce por partes"]
+  NANO -. sustituir ✨ .-> SUB
 ```
 
 | Paso | Usa | Se ejecuta en |
@@ -57,7 +56,7 @@ flowchart LR
 | Calidad mejor | Prompt API (Gemini Nano) + Translator API | Local |
 
 > [!TIP]
-> Las pruebas mostraron que la traducción de Chrome «japonés → chino tradicional» en realidad pasa por el inglés. Por eso el modo Calidad mejor sigue la ruta «Gemini Nano traduce al inglés → Translator traduce al idioma de destino»: Nano se ocupa del paso más débil y el último paso siempre lo hace un modelo dedicado al idioma de destino, así que no se cuelan otros sistemas de escritura.
+> Las pruebas mostraron que la traducción de Chrome «japonés → chino tradicional» en realidad pasa por el inglés, lo que causa errores (por ejemplo ご飯 «comida» → rice → 稻 «planta de arroz»). Por eso, cuando el destino es chino o inglés, el modo Calidad mejor hace que Gemini Nano traduzca **directamente**, sin pasar por el inglés, y las frases largas se retraducen por partes. Nano a veces escribe en chino simplificado; si una parte sale sin traducir (sigue en japonés), esa parte mantiene la traducción rápida. Para otros idiomas de destino la ruta es «Nano traduce al inglés → Translator traduce al idioma de destino».
 
 ## 🚀 Instalación
 
@@ -120,7 +119,7 @@ Chrome descarga y gestiona los modelos y los comparte entre todos los sitios y e
 
 - **Los errores de reconocimiento no se pueden corregir**: por ejemplo, 美容院 (peluquería) se oye como 病院 (hospital). Todavía no hay glosario.
 - **La traducción rápida no tiene contexto**: traduce frase a frase, así que las frases cortas y el lenguaje coloquial a menudo salen mal. Calidad mejor ayuda, pero tarda 1–3 s más por frase y usa más CPU.
-- **Calidad mejor solo procesa frases de hasta 80 caracteres**: un modelo pequeño tiende a resumir los párrafos largos, así que esos mantienen la traducción rápida.
+- **Calidad mejor procesa hasta 6 partes por frase**: las frases más largas mantienen la traducción rápida, para que una sola frase no retrase las siguientes. La retraducción no tiene en cuenta las frases de alrededor (en las pruebas, al darle las frases anteriores, el modelo pequeño las traducía a ellas).
 - **Las páginas propias de Chrome** (`chrome://…`) no pueden mostrar el cuadro flotante.
 - **Modo panel lateral**: tras un rato de inactividad del script en segundo plano, el primer clic puede no abrir el panel lateral. Vuelve a pulsar.
 - Probado sobre todo con japonés e inglés; los demás idiomas no se han probado a fondo.
